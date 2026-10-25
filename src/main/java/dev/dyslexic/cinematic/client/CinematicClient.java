@@ -205,9 +205,10 @@ public final class CinematicClient {
                 return;
             }
             LocalPlayer player = Minecraft.getInstance().player;
-            // (the lectern's window is a book screen, not a container screen, but it holds the menu all the same)
+            // (the lectern's window is a book screen, not a container screen, but it holds the menu all the same; while
+            // the server has not opened the block's menu yet, the player's own inventory is no menu of the block's)
             if (next instanceof MenuAccess<?> window && Scene.station.kind().usesMenu() && player != null
-                    && window.getMenu() == player.containerMenu) {
+                    && player.containerMenu != player.inventoryMenu && window.getMenu() == player.containerMenu) {
                 var addon = Scene.station.kind() == dev.dyslexic.cinematic.station.StationKind.ADDON
                         ? dev.dyslexic.cinematic.api.AddonStations.forBlock(player.level().getBlockState(Scene.station.pos)) : null;
                 boolean expected = addon != null ? addon.accepts(window.getMenu())
