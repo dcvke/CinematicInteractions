@@ -210,6 +210,13 @@ public final class Scene {
         if (phase != Phase.NONE || player == null || mc.level == null) {
             return;
         }
+        if (airborne(player)) {
+            // used mid-jump: the way in is planned from the ground under the feet, so it begins on landing
+            pendingPos = pos.immutable();
+            pendingKind = kind;
+            pendingAt = clock;
+            return;
+        }
         BlockState currentState = mc.level.getBlockState(pos);
         var addonDefinition = kind == StationKind.ADDON ? dev.dyslexic.cinematic.api.AddonStations.forBlock(currentState) : null;
         if (!Settings.scene(kind) || OWN_WINDOW.contains(kind)
@@ -690,6 +697,7 @@ public final class Scene {
 
     public static void tick() {
         if (phase == Phase.NONE) {
+            beginOnLanding();
             return;
         }
         Minecraft mc = Minecraft.getInstance();
@@ -733,6 +741,36 @@ public final class Scene {
         }
         if (phase == Phase.ACTIVE) {
             station.tick();
+        }
+    }
+
+    /** In the middle of a jump or a short drop (flying, gliding, swimming and climbing are left as they are). */
+    private static boolean airborne(LocalPlayer player) {
+        return !player.onGround() && !player.getAbilities().flying && !player.isFallFlying() && !player.isInWater()
+                && !player.onClimbable() && !player.isPassenger();
+    }
+
+    /** A station used mid-jump begins once the feet are back on the ground (not after a fall of more than two seconds). */
+    private static void beginOnLanding() {
+        if (pendingPos == null) {
+            return;
+        }
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || mc.level == null || clock - pendingAt >= 2) {
+            pendingPos = null;
+            pendingKind = null;
+            return;
+        }
+        if (airborne(player)) {
+            return;
+        }
+        BlockPos next = pendingPos;
+        StationKind nextKind = pendingKind;
+        pendingPos = null;
+        pendingKind = null;
+        if (nextKind != null && nextKind.matches(mc.level.getBlockState(next))) {
+            begin(next, nextKind);
         }
     }
 
