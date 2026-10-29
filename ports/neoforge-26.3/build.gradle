@@ -1,0 +1,67 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = '0.18.30-neoforge26.3-port.2'
+group = 'dev.dyslexic.cinematic'
+base.archivesName = 'Cinematic-Interactions-NeoForge-26.3'
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+java.withSourcesJar()
+
+repositories {
+    maven { url = 'https://api.modrinth.com/maven' }
+    mavenCentral()
+}
+
+neoForge {
+    version = '26.3.0.95'
+    accessTransformers.from(file('src/main/resources/META-INF/accesstransformer.cfg'))
+    runs {
+        client { client() }
+        server { server(); programArgument '--nogui' }
+        showcase {
+            client()
+            gameDirectory = file('run-showcase')
+            systemProperty 'cinematic.showcase', 'true'
+            systemProperty 'cinematic.showcase.world', 'cinematic-neoforge-port-test'
+            systemProperty 'cinematic.showcase.from', project.findProperty('from') ?: '0'
+            systemProperty 'cinematic.showcase.only', project.findProperty('only') ?: 'false'
+            programArguments.addAll '--width', '1280', '--height', '720'
+        }
+    }
+    mods { cinematic { sourceSet sourceSets.main } }
+}
+
+dependencies {
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly 'maven.modrinth:inventory-particles:NDNvqH73'
+    compileOnly 'maven.modrinth:inventory-interactions:9dCHnYUV'
+    compileOnly 'maven.modrinth:polymorph_plus:XfTi6eDO'
+    compileOnly 'maven.modrinth:jei:aSjVJwgD'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '200']
+}
+tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude 'fabric.mod.json', 'cinematic.accesswidener', 'cinematic.mixins.json', 'cinematic.fabric.mixins.json'
+}
+tasks.jar { from('../../LICENSE'); from('../../CREDITS.md') }
+
+// Reuse unchanged 26.3 code and assets; only loader-specific replacements live here.
+def overrides = fileTree('src/main/java').matching { include '**/*.java' }.files.collect {
+    file('src/main/java').toPath().relativize(it.toPath()).toString().replace('\\', '/')
+}
+def prepareCommonSources = tasks.register('prepareCommonSources', Sync) {
+    from('../../multiversion/src/main/java') {
+        exclude overrides
+        exclude 'dev/dyslexic/cinematic/client/ModMenuIntegration.java'
+    }
+    into layout.buildDirectory.dir('generated/commonJava')
+}
+sourceSets.main.java.srcDir(prepareCommonSources)
+sourceSets.main.resources.srcDir('../../src/main/resources')
+sourceSets.main.resources.srcDir('../../multiversion/src/main/resources')

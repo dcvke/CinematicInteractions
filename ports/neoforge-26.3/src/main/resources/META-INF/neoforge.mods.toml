@@ -1,0 +1,22 @@
+license="MIT"
+[[mods]]
+modId="cinematic"
+version="0.18.30-neoforge26.3-port.2"
+displayName="Cinematic Interactions (NeoForge 26.3 port)"
+authors="Southware; unofficial NeoForge 26.3 adaptation"
+description="First-person cinematic workstation interactions. Unofficial experimental port for Minecraft 26.3."
+logoFile="cinematic_logo.png"
+[[mixins]]
+config="cinematic.neoforge.mixins.json"
+[[dependencies.cinematic]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.95,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.cinematic]]
+modId="minecraft"
+type="required"
+versionRange="[26.3]"
+ordering="NONE"
+side="BOTH"

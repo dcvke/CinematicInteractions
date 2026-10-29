@@ -1,0 +1,45 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.dyslexic.cinematic.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "AbstractFurnaceBlockEntityMixin",
+    "BrewingStandBlockEntityMixin",
+    "CraftingMenuAccess",
+    "EnchantmentMenuMixin",
+    "PlayerChunkSenderMixin",
+    "ServerLevelMixin",
+    "ServerPlayerMixin"
+  ],
+  "client": [
+    "CameraMixin",
+    "ExperienceOrbRendererMixin",
+    "HumanoidModelMixin",
+    "CampfireLegModelMixin",
+    "CampfireArmorMixin",
+    "ItemInHandLayerMixin",
+    "LecternRendererMixin",
+    "MinecraftMixin",
+    "ScreenMixin",
+    "ScreenWidgetAccess",
+    "LocalPlayerMixin",
+    "KeyboardInputMixin",
+    "MouseHandlerMixin",
+    "FirstPersonHandsMixin",
+    "GuiMixin",
+    "BossHealthOverlayMixin",
+    "PlayerRendererMixin",
+    "ClientLevelMixin",
+    "LevelRendererMixin",
+    "SceneFrameMixin",
+    "SceneExtractionMixin",
+    "GuiScreenMixin",
+    "LivingEntitySwingMixin",
+    "CampfireRendererMixin",
+    "compat.PunchyCameraStateMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

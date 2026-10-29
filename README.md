@@ -70,6 +70,8 @@ Press **H** while looking at a campfire to sit down. Hold **Left Alt** during a 
 
 ## 🛠️ Build & explore
 
+An experimental standalone **NeoForge 26.3** source target is available in [`ports/neoforge-26.3/`](ports/neoforge-26.3/). It requires Java 25 and NeoForge 26.3.0.95; see its README for build instructions and verification limits. It is not a published release.
+
 The root project builds NeoForge 1.21.1, Forge 1.20.1 and Fabric 1.20.1 / 1.21.1 from one source tree with [Stonecutter](https://stonecutter.kikugie.dev/): `src/main/java` holds the NeoForge 1.21.1 code, and the other loaders and versions sit next to it in `//? if` comments. `./gradlew build` builds all four (JARs in `versions/<target>/build/libs/`), `./gradlew :1.20.1-forge:runClient` runs one, and `./gradlew "Set active project to 1.20.1-fabric"` shows another target's code as plain Java (run `./gradlew "Reset active project"` before committing). Fabric 1.21.11 and 26.x are built by a second Stonecutter project, [`multiversion/`](multiversion/README.md), split off where Minecraft's rendering API changed; the two hold separate copies of the code. Fabric 1.21–1.21.10 (0.12.x) are no longer built. Notes of the former separate ports are in [`docs/ports/`](docs/ports/). Start with the [developer guide](docs/wiki/Development.md) and the README for the version you want to work on.
 
 ## 🗺️ Roadmap
